@@ -1,13 +1,13 @@
 module Models exposing (..)
 
-import RemoteData exposing (WebData)
+import Players.Players as Players
 import Material
 
 
 type alias Model =
     { mdl : Material.Model
     , title : String
-    , players : WebData (List Player)
+    , players : Players.Model
     , route : Route
     }
 
@@ -16,25 +16,13 @@ initialModel : Route -> Model
 initialModel route =
     { mdl = Material.model
     , title = "Users"
-    , players = RemoteData.Loading
+    , players = Players.model
     , route = route
     }
 
 
-type alias PlayerId =
-    String
-
-
-type alias Player =
-    { id : PlayerId
-    , name : String
-    , level : Int
-    }
-
-
 type Route
-    = 
-    Home
+    = Home
     | PlayersRoute
-    | PlayerRoute PlayerId
+    | PlayerRoute Players.PlayerId
     | NotFoundRoute

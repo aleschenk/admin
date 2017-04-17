@@ -1,7 +1,8 @@
 module Update exposing (..)
 
 import Commands exposing (savePlayerCmd)
-import Models exposing (Model, Player)
+import Models exposing (Model)
+import Players.Players as Players exposing (Player)
 import Msgs exposing (Msg)
 import Routing exposing (parseLocation)
 import RemoteData
@@ -11,7 +12,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Msgs.OnFetchPlayers response ->
-            ( { model | players = response }, Cmd.none )
+            let
+                players = model.players
+                newPlayers = { players | players = response }
+            in
+                ( { model | players = newPlayers}, Cmd.none )
 
         Msgs.OnLocationChange location ->
             let
@@ -22,13 +27,15 @@ update msg model =
 
         Msgs.ChangeLevel player howMuch ->
             let
-                updatedPlayer =
-                    { player | level = player.level + howMuch }
-            in
+                updatedPlayer = { player | level = player.level + howMuch }
+            in  
                 ( model, savePlayerCmd updatedPlayer )
 
         Msgs.OnPlayerSave (Ok player) ->
-            ( updatePlayer model player, Cmd.none )
+            let 
+                newPlayersModel = updatePlayer model.players player
+            in 
+                ( {model | players = newPlayersModel }, Cmd.none )
 
         Msgs.OnPlayerSave (Err error) ->
             ( model, Cmd.none )
@@ -36,7 +43,7 @@ update msg model =
         Msgs.Mdl msg_ ->
             Material.update Msgs.Mdl msg_ model
 
-updatePlayer : Model -> Player -> Model
+updatePlayer : Players.Model -> Player -> Players.Model
 updatePlayer model updatedPlayer =
     let
         pick currentPlayer =

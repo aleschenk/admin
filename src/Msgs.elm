@@ -1,7 +1,7 @@
 module Msgs exposing (..)
 
 import Http
-import Models exposing (Player, PlayerId)
+import Players.Players exposing (Player, PlayerId)
 import Navigation exposing (Location)
 import RemoteData exposing (WebData)
 import Material

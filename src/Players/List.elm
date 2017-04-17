@@ -2,7 +2,7 @@ module Players.List exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
-import Models exposing (Player)
+import Players.Players exposing (Player)
 import Msgs exposing (Msg)
 import RemoteData exposing (WebData)
 import Routing exposing (playerPath)
@@ -38,7 +38,7 @@ maybeList response =
             text (toString error)
 
 
-list : List Player -> Html Msg
+list : List Players.Players.Player -> Html Msg
 list players =
     div [ class "p2" ]
         [ table []

@@ -2,7 +2,9 @@ module View exposing (..)
 
 import Html exposing (Html, div, text, h1)
 import Html.Attributes exposing (style)
-import Models exposing (Model, PlayerId)
+import Models exposing (Model)
+import Players.Players as Players exposing (PlayerId)
+import Players.List
 import Msgs exposing (Msg)
 import Home.List
 import Players.Edit
@@ -12,21 +14,19 @@ import RemoteData
 import Material
 import Material.Layout as Layout
 import Material.Color as Color
-import Material.Button as Button exposing (..)
+-- import Material.Button as Button exposing (..)
 import Material.Options as Options exposing (css, when)
 import Material.Icon as Icon
 import Material.Scheme
 
-view : Models.Model -> Html Msgs.Msg
+view : Model -> Html Msg
 view model =
     div []
         [ mainLayout model ]
-{--
+{--}
 tabs : List ( String, String, Model -> Html Msg )
 tabs =
-    [ ( "Users", "users", .buttons >> Demo.Buttons.view >> Html.map ButtonsMsg )
-    , ( "Customers", "customers", .tooltip >> Demo.Tooltip.view >> Html.map TooltipMsg )
-    , ( "Invoices", "inovices", .typography >> Demo.Typography.view >> Html.map TypographyMsg )
+    [ ( "Players", "players", .players >> Players.List.view >> Html.map Msg )
     ]
 
 tabTitles : List (Html a)
@@ -56,7 +56,7 @@ page model =
             Home.List.view
 
         Models.PlayersRoute ->
-            Players.List.view model.players
+            Players.List.view model.players.players
 
         Models.PlayerRoute id ->
             playerEditPage model id
@@ -67,7 +67,7 @@ page model =
 
 playerEditPage : Models.Model -> PlayerId -> Html Msgs.Msg
 playerEditPage model playerId =
-    case model.players of
+    case model.players.players of
         RemoteData.NotAsked ->
             text ""
 
